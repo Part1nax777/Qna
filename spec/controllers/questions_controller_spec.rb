@@ -16,7 +16,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'GET show' do
+  describe 'GET #show' do
     before { get :show, params: { id: question } }
 
     it 'renders show view' do
@@ -32,7 +32,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'GET edit' do
+  describe 'GET #edit' do
     before { get :edit, params: { id: question } }
 
     it 'render edit view' do
