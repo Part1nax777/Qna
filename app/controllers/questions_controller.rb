@@ -3,12 +3,7 @@ class QuestionsController < ApplicationController
     @questions = Question.all
   end
 
-  def show; end
-
-  def new
-  end
-
-  def edit; end
+  def new; end
 
   def create
     @question = Question.new(questions_params)
@@ -18,19 +13,6 @@ class QuestionsController < ApplicationController
     else
       render :new
     end
-  end
-
-  def update
-    if question.update(questions_params)
-      redirect_to(@question)
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    question.destroy
-    redirect_to questions_path
   end
 
   private

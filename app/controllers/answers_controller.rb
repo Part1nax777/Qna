@@ -1,6 +1,5 @@
 class AnswersController < ApplicationController
 
-
   def new
     @answer = question.answers.new
   end
