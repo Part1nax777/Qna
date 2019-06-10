@@ -5,12 +5,12 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = question.answers.create(answer_params)
+    @answer = question.answers.new(answer_params)
 
     if @answer.save
-      redirect_to question_answers_path(@question)
+      redirect_to question_path(@answer.question), notice: 'You answer successfully create'
     else
-      render :new
+      render 'questions/show'
     end
   end
 
