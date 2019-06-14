@@ -7,7 +7,7 @@ feature 'User can show list of questions', %q{
 } do
 
   given(:user) { create(:user) }
-  given!(:questions) { create_list(:question, 3) }
+  given!(:questions) { create_list(:question, 3, user_id: user.id) }
 
   scenario 'Unauthenticated user can show questions' do
     visit questions_path

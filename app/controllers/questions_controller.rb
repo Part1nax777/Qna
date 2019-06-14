@@ -11,13 +11,13 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    @question = Question.new
+    @question = current_user.questions.new
   end
 
   def edit; end
 
   def create
-    @question = Question.new(questions_params)
+    @question = current_user.questions.new(questions_params)
 
     if @question.save
       redirect_to @question, notice: 'You question successfully created.'
@@ -35,8 +35,13 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy
-    redirect_to questions_path
+    @question = Question.find(params[:id])
+    if current_user.author_of?(@question)
+      @question.destroy
+      redirect_to questions_path
+    else
+      redirect_to questions_path, notice: 'You are not author of question!'
+    end
   end
 
   private

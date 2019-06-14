@@ -6,8 +6,9 @@ feature 'User can show questions', %q{
   And the answers to it
 } do
 
-  given(:question) { create(:question) }
-  given!(:answer) { create(:answer, question: question) }
+  given(:user) { create(:user) }
+  given!(:question) { create(:question, user_id: user.id) }
+  given!(:answer) { create(:answer, question: question, user_id: user.id) }
 
   scenario 'User can view question and answers' do
     visit question_path(question)

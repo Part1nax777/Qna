@@ -4,9 +4,11 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
   let(:user) { create(:user) }
 
+
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 3) }
+    let(:questions) { create_list(:question, 3, user_id: user.id) }
     before { get :index }
+    before { login(user) }
 
     it 'populates an array of all questions' do
       expect(assigns(:questions)).to match_array(questions)
@@ -19,6 +21,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'Get #show' do
     before { get :show, params: { id: question } }
+    let(:question) { create(:question, user_id: user.id) }
 
     it 'assigns the requested question to @question' do
       expect(assigns(:question)).to eq question
@@ -45,6 +48,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #edit' do
     before { login(user) }
     before { get :edit, params: { id: question } }
+    let(:question) { create(:question, user_id: user.id) }
 
     it 'assigns the request question to @question' do
       expect(assigns(:question)).to eq question
@@ -83,6 +87,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     before { login(user) }
+    let(:question) { create(:question, user_id: user.id) }
 
     context 'with valid attributes' do
       it 'assigns the request question to @question' do
@@ -121,8 +126,9 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { login(user) }
-    let!(:question) { create(:question) }
+    let!(:user1) { create(:user) }
+    let!(:question) { create(:question, user_id: user1.id) }
+    before { login(user1) }
 
     it 'deletes the question' do
       expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
