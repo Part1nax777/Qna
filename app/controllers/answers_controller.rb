@@ -1,13 +1,9 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :question
-
-  def new
-    @answer = question.answers.new
-  end
+  before_action :load_question, only: [:create, :destroy]
 
   def create
-    @answer = question.answers.new(answer_params)
+    @answer = @question.answers.new(answer_params)
     @answer.user = current_user
 
     if @answer.save
@@ -19,18 +15,14 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer = Answer.find(params[:id])
-    if current_user.author_of?(@answer)
-      @answer.destroy
-      redirect_to question_path(@question)
-    else
-      redirect_to question_path(@question)
-    end
+    @answer.destroy if current_user.author_of?(@answer)
+    redirect_to question_path(@answer.question)
   end
 
   private
 
-  def question
-    @question ||= Question.find(params[:question_id])
+  def load_question
+    @question = Question.find(params[:question_id])
   end
 
   def answer_params

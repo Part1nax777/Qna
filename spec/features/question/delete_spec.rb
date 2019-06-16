@@ -23,10 +23,13 @@ feature 'User can delete question', %q{
   scenario 'User trying delete not his question' do
     sign_in(user2)
     visit question_path(question)
-    click_on 'Delete question'
 
-    expect(page).to have_content question.body
-    expect(page).to have_content question.title
-    expect(page).to have_content 'You are not author of question!'
+    expect(page).to_not have_content 'Delete question'
+  end
+
+  scenario 'Unauthenticated user trying delete question' do
+    visit question_path(question)
+
+    expect(page).to_not have_content 'Delete question'
   end
 end

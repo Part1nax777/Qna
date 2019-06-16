@@ -2,3 +2,8 @@ tr
   td
     = answer.body
 
+- if current_user&.author_of?(answer)
+  = link_to 'Delete answer',
+          question_path(@question, answer),
+          method: :delete,
+          data: { confirm: 'You sure delete?' }
