@@ -82,10 +82,6 @@ RSpec.describe QuestionsController, type: :controller do
         expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
       end
 
-      it 'does not save the question with user association' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(user.questions, :count)
-      end
-
       it 'render new view' do
         post :create, params: { question: attributes_for(:question, :invalid) }
         expect(response).to render_template :new

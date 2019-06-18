@@ -24,7 +24,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'not save answer in database' do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to_not change(question.answers, :count)
+        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to_not change(Answer, :count)
       end
 
       it 'not save answer in database with user association' do
@@ -48,7 +48,7 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user1) }
 
       it 'trying delete his answer' do
-        expect { delete :destroy, params: { id: answer, question_id: question } }.to change(question.answers, :count).by(-1)
+        expect { delete :destroy, params: { id: answer, question_id: question } }.to change(Answer, :count).by(-1)
       end
 
       it 'redirect to show' do
@@ -61,7 +61,7 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user2) }
 
       it 'trying delete answer' do
-        expect { delete :destroy, params: { id: answer, question_id: question } }.to_not change(question.answers, :count)
+        expect { delete :destroy, params: { id: answer, question_id: question } }.to_not change(Answer, :count)
       end
 
       it 'redirect to show' do
