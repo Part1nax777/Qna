@@ -1,27 +1,54 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, except: [:show, :index]
+  before_action :load_question, only: [:show, :edit, :update, :destroy]
+
   def index
     @questions = Question.all
   end
 
-  def new; end
+  def show
+    @answer = @question.answers.new
+  end
+
+  def new
+    @question = current_user.questions.new
+  end
+
+  def edit; end
 
   def create
-    @question = Question.new(questions_params)
+    @question = current_user.questions.new(questions_params)
 
     if @question.save
-      redirect_to(@question)
+      redirect_to @question, notice: 'You question successfully created.'
     else
       render :new
     end
   end
 
-  private
-
-  def question
-    @question ||= params[:id] ? Question.find(params[:id]) : Question.new
+  def update
+    if @question.update(questions_params)
+      redirect_to @question
+    else
+      render :edit
+    end
   end
 
-  helper_method :question
+  def destroy
+    @question = Question.find(params[:id])
+    if current_user.author_of?(@question)
+      @question.destroy
+      redirect_to questions_path
+    else
+      redirect_to questions_path, notice: 'You are not author of question!'
+    end
+  end
+
+  private
+
+  def load_question
+    @question = Question.find(params[:id])
+  end
 
   def questions_params
     params.require(:question).permit(:title, :body)
