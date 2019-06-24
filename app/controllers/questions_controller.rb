@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.new
+    @answer = Answer.new
   end
 
   def new
@@ -36,12 +36,8 @@ class QuestionsController < ApplicationController
 
   def destroy
     @question = Question.find(params[:id])
-    if current_user.author_of?(@question)
-      @question.destroy
-      redirect_to questions_path
-    else
-      redirect_to questions_path, notice: 'You are not author of question!'
-    end
+    @question.destroy if current_user.author_of?(@question)
+    redirect_to questions_path
   end
 
   private
