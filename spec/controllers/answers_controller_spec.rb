@@ -92,12 +92,12 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user1) }
 
       it 'trying delete his answer' do
-        expect { delete :destroy, params: { id: answer, question_id: question } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirect to show' do
-        delete :destroy, params: { id: answer, question_id: question }
-        expect(response).to redirect_to assigns(:question)
+      it 'render template destroy' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -105,12 +105,12 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user2) }
 
       it 'trying delete answer' do
-        expect { delete :destroy, params: { id: answer, question_id: question } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirect to show' do
-        delete :destroy, params: { id: answer, question_id: question }
-        expect(response).to redirect_to assigns(:question)
+      it 'render template destroy' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end
