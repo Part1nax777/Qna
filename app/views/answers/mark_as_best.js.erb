@@ -1,0 +1,5 @@
+<% if @answer.best %>
+  $('<%="#answer-#{ @answer.id }" %>').addClass('best');
+  $('.mark-as-best').removeClass('hidden');
+  $(".mark-as-best[data-answer-id='<%= @answer.id %>']").addClass('hidden');
+<% end %>

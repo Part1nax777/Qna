@@ -80,7 +80,38 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template :update
       end
     end
+  end
 
+  describe 'PATCH #mark_as_best' do
+    let!(:question) { create(:question, user: user) }
+    let!(:answer) { create(:answer, question: question, user: user) }
+    let!(:another_answer) { create(:answer, question: question, user: user) }
+
+    context 'Author of question ticks the best answer' do
+      it 'best for answer is true' do
+        patch :mark_as_best, params: { id: answer }, format: :js
+        answer.reload
+
+        expect(answer.best).to be_truthy
+      end
+
+      it 'redirect to best answer view' do
+        patch :mark_as_best, params: { id: answer }, format: :js
+
+        expect(response).to render_template :mark_as_best
+      end
+    end
+
+    context 'No author of question ticks the best answer' do
+      before { login(user2) }
+
+      it 'best for answer is false' do
+        patch :mark_as_best, params: { id: answer }, format: :js
+        answer.reload
+
+        expect(answer.best).to be_falsey
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
