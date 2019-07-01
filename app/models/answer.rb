@@ -8,7 +8,7 @@ class Answer < ApplicationRecord
 
   def mark_as_best
     transaction do
-      question.answers.update_all(best: false)
+      question.answers.where(best: true).update_all(best: false)
       update!(best: true)
     end
   end

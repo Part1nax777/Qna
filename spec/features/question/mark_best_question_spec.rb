@@ -28,15 +28,15 @@ feature 'User can mark best answer', %q{
 
     scenario 'Author of question can mark another best question' do
       answers.last.best = true
-      visit question_path(question)
+      answers.last.reload
 
+      visit question_path(question)
       first('.mark-as-best').click
 
       expect(page).to have_css('.best', count: 1)
     end
 
     scenario 'No author not can mark best question' do
-
       visit question_path(another_question)
 
       expect(page).to_not have_link 'Best answer'

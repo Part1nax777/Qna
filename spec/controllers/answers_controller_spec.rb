@@ -9,12 +9,9 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attributes' do
-      it 'save answer in database' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
-      end
-
       it 'save answer in database with user association' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(user.answers, :count).by(1)
+        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
+        expect(assigns(:answer).user).to eq user
       end
 
       it 'renders create template' do
@@ -26,10 +23,6 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       it 'not save answer in database' do
         expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(Answer, :count)
-      end
-
-      it 'not save answer in database with user association' do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(user.answers, :count)
       end
 
       it 'renders create template' do
@@ -72,7 +65,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'try update question' do
         expect do
           patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-        end.to_not change(answer, :body)
+        end.to_not change(answer.reload, :body)
       end
 
       it 'render update view' do
@@ -92,7 +85,7 @@ RSpec.describe AnswersController, type: :controller do
         patch :mark_as_best, params: { id: answer }, format: :js
         answer.reload
 
-        expect(answer.best).to be_truthy
+        expect(answer).to be_best
       end
 
       it 'redirect to best answer view' do
@@ -109,7 +102,8 @@ RSpec.describe AnswersController, type: :controller do
         patch :mark_as_best, params: { id: answer }, format: :js
         answer.reload
 
-        expect(answer.best).to be_falsey
+        #expect(answer.best).to be_falsey
+        expect(answer).to_not be_best
       end
     end
   end
@@ -123,7 +117,7 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user1) }
 
       it 'trying delete his answer' do
-        expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer, question_id: question }, format: :js }.to change(question.answers, :count).by(-1)
       end
 
       it 'render template destroy' do

@@ -10,23 +10,14 @@ RSpec.describe Answer, type: :model do
   let!(:question) { create(:question, user: user) }
   let!(:answer) { create(:answer, question: question, user: user) }
   let!(:answer2) { create(:answer, question: question, user: user) }
+  let!(:answer3) { create(:answer, question: question, user: user, best: true) }
 
-  it 'mark best answer' do
-    answer.mark_as_best
-
-    expect(answer.best).to be_truthy
-  end
-
-  it 'one answer is best' do
-    answer.mark_as_best
+  it 'best answer is a first and only one' do
     answer2.mark_as_best
-    answer.reload
 
-    expect(answer.best).to_not be_truthy
-  end
-
-  it 'best answer is a first' do
-    answer2.mark_as_best
+    expect(Answer.first).to_not eq(answer3)
     expect(Answer.first).to eq(answer2)
+    expect(answer2).to be_best
+    expect(question.answers.where(best: true).count).to eq 1
   end
 end
