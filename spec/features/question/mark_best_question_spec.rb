@@ -27,11 +27,15 @@ feature 'User can mark best answer', %q{
     end
 
     scenario 'Author of question can mark another best question' do
-      answers.last.best = true
-      answers.last.reload
-
       visit question_path(question)
-      first('.mark-as-best').click
+
+      within "#answer-#{answers.first.id}" do
+        click_on 'Best answer'
+      end
+
+      within "#answer-#{answers.last.id}" do
+        click_on 'Best answer'
+      end
 
       expect(page).to have_css('.best', count: 1)
     end

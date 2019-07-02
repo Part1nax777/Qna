@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
 
 
   describe 'GET #index' do
@@ -90,10 +91,11 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    before { login(user) }
     let(:question) { create(:question, user: user) }
 
     context 'with valid attributes' do
+      before { login(user) }
+
       it 'changes question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
         question.reload
@@ -109,6 +111,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      before { login(user) }
 
       it 'does not change question' do
         expect do
@@ -119,6 +122,29 @@ RSpec.describe QuestionsController, type: :controller do
       it 'render update view' do
         patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
         expect(response).to render_template :update
+      end
+    end
+
+    context 'with another user' do
+      before { login(another_user) }
+
+      it 'not changes question attributes' do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+        question.reload
+
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
+      end
+    end
+
+    context 'with unauthorised user' do
+
+      it 'not changes question attributes' do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+        question.reload
+
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
       end
     end
   end

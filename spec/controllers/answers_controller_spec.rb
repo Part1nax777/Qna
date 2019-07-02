@@ -3,15 +3,18 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
-  let!(:question) { create(:question, user: user) }
-  let!(:answer) { create(:answer, question: question, user: user) }
-  before { login(user) }
+  let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
+    before { login(user) }
+
     context 'with valid attributes' do
+
       it 'save answer in database with user association' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
-        expect(assigns(:answer).user).to eq user
+        expect { post :create, params: { answer: attributes_for(:answer, body: 'current answer body'), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
+        answer_new = question.answers.find_by attributes_for(:answer, body: 'current answer body')
+        expect(user.id).to eq (answer_new.user_id)
       end
 
       it 'renders create template' do
@@ -22,7 +25,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'not save answer in database' do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(Answer, :count)
+        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(question.answers, :count)
       end
 
       it 'renders create template' do
@@ -33,6 +36,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    before { login(user) }
     context 'with valid attributes' do
       it 'changes answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
@@ -50,6 +54,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change answer' do
         expect do
           patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+          answer.reload
         end.to_not change(answer, :body)
       end
 
@@ -63,9 +68,9 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user2) }
 
       it 'try update question' do
-        expect do
-          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-        end.to_not change(answer.reload, :body)
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        answer.reload
+        expect(answer.body).to_not eq 'new body'
       end
 
       it 'render update view' do
@@ -81,6 +86,8 @@ RSpec.describe AnswersController, type: :controller do
     let!(:another_answer) { create(:answer, question: question, user: user) }
 
     context 'Author of question ticks the best answer' do
+      before { login(user) }
+
       it 'best for answer is true' do
         patch :mark_as_best, params: { id: answer }, format: :js
         answer.reload
@@ -102,7 +109,15 @@ RSpec.describe AnswersController, type: :controller do
         patch :mark_as_best, params: { id: answer }, format: :js
         answer.reload
 
-        #expect(answer.best).to be_falsey
+        expect(answer).to_not be_best
+      end
+    end
+
+    context 'Unautorised user ticks the best answer' do
+      it 'best for answer is false' do
+        patch :mark_as_best, params: { id: answer }, format: :js
+        answer.reload
+
         expect(answer).to_not be_best
       end
     end
