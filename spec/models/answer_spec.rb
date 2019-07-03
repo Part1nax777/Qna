@@ -12,9 +12,14 @@ RSpec.describe Answer, type: :model do
   let(:answer2) { create(:answer, question: question, user: user, best: true) }
   let(:answer3) { create(:answer, question: question, user: user) }
 
+  it 'answer is mark best' do
+    answer1.mark_as_best
+
+    expect(answer1).to be_best
+  end
+
   it 'best answer is a first and only one' do
     expect(question.answers).to eq([answer2, answer1, answer3])
-    expect(answer2).to be_best
     expect(question.answers.where(best: true).count).to eq 1
   end
 end

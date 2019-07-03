@@ -116,7 +116,8 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change question' do
         expect do
           patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-        end.to_not change(question.reload, :body)
+          question.reload
+        end.to_not change(question, :body)
       end
 
       it 'render update view' do
