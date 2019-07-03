@@ -16,10 +16,12 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'association with user' do
-        answer_attribute = attributes_for(:answer)
-        post :create, params: { answer: answer_attribute, question_id: question }, format: :js
-        answer_new = question.answers.find_by answer_attribute
-        expect(user.id).to eq(answer_new.user_id)
+        #answer_attribute = attributes_for(:answer)
+        #post :create, params: { answer: answer_attribute, question_id: question }, format: :js
+        #answer_new = question.answers.find_by answer_attribute
+        #expect(user.id).to eq(answer_new.user_id)
+        post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js
+        expect(assigns(:answer).user_id).to eq(user.id)
       end
 
       it 'renders create template' do
