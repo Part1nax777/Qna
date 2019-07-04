@@ -16,11 +16,8 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'association with user' do
-        #answer_attribute = attributes_for(:answer)
-        #post :create, params: { answer: answer_attribute, question_id: question }, format: :js
-        #answer_new = question.answers.find_by answer_attribute
-        #expect(user.id).to eq(answer_new.user_id)
         post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js
+
         expect(assigns(:answer).user_id).to eq(user.id)
       end
 
@@ -48,11 +45,13 @@ RSpec.describe AnswersController, type: :controller do
       it 'changes answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         answer.reload
+
         expect(answer.body).to eq 'new body'
       end
 
       it 'render update view' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+
         expect(response).to render_template :update
       end
     end
@@ -67,6 +66,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders update view' do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+
         expect(response).to render_template :update
       end
     end
@@ -77,11 +77,13 @@ RSpec.describe AnswersController, type: :controller do
       it 'try update question' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         answer.reload
+
         expect(answer.body).to_not eq 'new body'
       end
 
       it 'render update view' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+
         expect(response).to render_template :update
       end
     end
