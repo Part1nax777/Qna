@@ -1,6 +1,9 @@
 div id = "answer-#{answer.id}" class=('best' if answer.best)
 
   p= answer.body
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      p= link_to file.filename.to_s, url_for(file)
 
   - if current_user&.author_of?(answer)
     p= link_to 'Edit', '#', class: 'edit-answer-link', data: {answer_id: answer.id}
@@ -14,5 +17,3 @@ div id = "answer-#{answer.id}" class=('best' if answer.best)
       = f.label :body, 'You answer'
       = f.text_area :body
       = f.submit 'Save'
-
-
