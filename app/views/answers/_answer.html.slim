@@ -1,9 +1,18 @@
-tr
-  td
-    = answer.body
+div id = "answer-#{answer.id}" class=('best' if answer.best)
 
-- if current_user&.author_of?(answer)
-  = link_to 'Delete answer',
-          question_path(@question, answer),
-          method: :delete,
-          data: { confirm: 'You sure delete?' }
+  p= answer.body
+
+  - if current_user&.author_of?(answer)
+    p= link_to 'Edit', '#', class: 'edit-answer-link', data: {answer_id: answer.id}
+
+    p= link_to 'Delete answer', answer, method: :delete, remote: true
+
+  - if current_user&.author_of?(answer.question)
+    p= link_to 'Best answer', mark_as_best_answer_path(answer), class: 'mark-as-best', data: { answer_id: answer.id }, method: :patch, remote: true
+
+    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+      = f.label :body, 'You answer'
+      = f.text_area :body
+      = f.submit 'Save'
+
+
