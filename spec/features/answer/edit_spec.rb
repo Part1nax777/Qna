@@ -57,5 +57,19 @@ feature 'User can edit his answer', %q{
         expect(page).to_not have_content 'Edit'
       end
     end
+
+    scenario 'try add files when editing a answer' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit'
+
+      within ".answers" do
+        fill_in 'Body', with: 'modified answer'
+        attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+      end
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
+    end
   end
 end
