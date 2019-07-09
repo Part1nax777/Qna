@@ -19,6 +19,10 @@ feature 'Author can delete attached files', %q{
       click_on 'Create answer'
     end
 
+    scenario 'File is attached to answer' do
+      expect(page).to have_content 'rails_helper.rb'
+    end
+
     scenario 'Author of answer' do
       click_on 'Delete file'
 
