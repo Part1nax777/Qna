@@ -10,4 +10,8 @@
     = f.text_area :body
 
   p
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true
+
+  p
     = f.submit 'Ask'

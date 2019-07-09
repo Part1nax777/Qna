@@ -27,4 +27,8 @@ RSpec.describe Answer, type: :model do
   it 'best answer is a first and only one' do
     expect(question.answers).to eq([answer2, answer1, answer3])
   end
+
+  it 'have many attached files' do
+    expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+  end
 end
