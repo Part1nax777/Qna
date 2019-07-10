@@ -1,6 +1,12 @@
 .question-show
   =render @question
 
+.question-links
+  p Links:
+  ul
+    - @question.links.each do |link|
+      li= link_to link.name, link.url
+
 .question-errors
 
 .question
@@ -32,4 +38,10 @@
   = f.text_area :body
   p= f.label :files
   = f.file_field :files, multiple: true, direct_upload: true
+  p Links:
+  p = f.fields_for :links do |l|
+      = render 'shared/link_template', f: l
+  .links
+    = link_to_add_association 'add link', f, :links, partial: 'shared/link_template'
+
   p= f.submit 'Create answer'

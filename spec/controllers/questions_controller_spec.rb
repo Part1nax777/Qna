@@ -24,8 +24,8 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :show, params: { id: question } }
     let(:question) { create(:question, user: user) }
 
-    it 'assigns the requested question to @question' do
-      expect(assigns(:question)).to eq question
+    it 'assign a new link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
     end
 
     it 'render show view' do
@@ -39,6 +39,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns a new Question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
+    end
+
+    it 'assign a new Link to :link' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
     end
 
     it 'render new view' do
