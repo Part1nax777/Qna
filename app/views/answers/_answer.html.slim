@@ -5,6 +5,10 @@ div id = "answer-#{answer.id}" class=('best' if answer.best)
     p Links:
     ul
       - answer.links.each do |link|
+        - if link.url_gist_link?
+          p
+            b= link.gist_title
+            br= link.gist_body
         li= link_to link.name, link.url
 
   = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|

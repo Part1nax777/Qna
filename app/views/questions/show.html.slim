@@ -5,6 +5,10 @@
   p Links:
   ul
     - @question.links.each do |link|
+      - if link.url_gist_link?
+        p
+          b= link.gist_title
+          br= link.gist_body
       li= link_to link.name, link.url
 
 .question-errors
