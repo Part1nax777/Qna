@@ -1,7 +1,8 @@
 $('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
 
 <% if !@question.errors.present? %>
-$('.question-show').html('<%= j render @question %>');
-$('#edit-question').addClass('hidden');
-$('.edit-question-link').show();
+  $('.question-show').html("<%= j render @question %>");
+  $('.question-links').html("<%= j render partial: 'show_question_links' %>");
+  $('#edit-question').addClass('hidden');
+  $('.edit-question-link').show();
 <% end %>

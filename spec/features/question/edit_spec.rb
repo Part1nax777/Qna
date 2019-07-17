@@ -10,6 +10,7 @@ feature 'User can edit his question', %q{
   given!(:user2) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
+  given!(:link_url) { 'http://google.com' }
 
   describe 'Authenticate user', js: true do
 
@@ -61,6 +62,20 @@ feature 'User can edit his question', %q{
 
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
+    end
+
+    scenario 'try add links when editing question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+      within ".question" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'google'
+        fill_in 'Url', with: link_url
+        click_on 'Save'
+      end
+
+      expect(page).to have_link 'google', href: link_url
     end
   end
 

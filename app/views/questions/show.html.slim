@@ -2,17 +2,7 @@
   =render @question
 
 .question-links
-  p Links:
-  ul
-    - @question.links.each do |link|
-      div class="link-#{link.id}"
-        - if link.url_gist_link?
-          p
-            b= link.gist_title
-            br= link.gist_body
-        li= link_to link.name, link.url
-        - if current_user&.author_of?(@question)
-          = link_to 'Delete link', link_path(link), method: :delete, remote: true
+  = render 'show_question_links'
 
 .question-errors
 
@@ -28,6 +18,9 @@
       = f.text_area :body
       p= f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
+      p= f.fields_for :links do |l|
+      .links
+        = link_to_add_association 'add link', f, :links, partial: 'shared/link_template'
       p= f.submit 'Save'
 
     p= link_to 'Delete question',
