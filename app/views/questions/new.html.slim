@@ -19,5 +19,15 @@
       = render 'shared/link_template', f: l
     .links
       = link_to_add_association 'add link', f, :links, partial: 'shared/link_template'
+
+  p Badge:
+  p
+    = f.fields_for :badge do |b|
+      p
+        = b.label :name
+        = b.text_field :name
+      p
+        = b.label :image
+        = b.file_field :image
   p
     = f.submit 'Ask'
