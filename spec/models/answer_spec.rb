@@ -10,10 +10,13 @@ RSpec.describe Answer, type: :model do
   it { should accept_nested_attributes_for :links }
 
   let(:user) { create(:user) }
+  let(:user2) { create(:user) }
   let(:question) { create(:question, user: user) }
   let(:answer1) { create(:answer, question: question, user: user) }
   let(:answer2) { create(:answer, question: question, user: user, best: true) }
   let(:answer3) { create(:answer, question: question, user: user) }
+  let(:answer4) { create(:answer, question: question, user: user2) }
+  let(:badge) { create(:badge, question: question, user: user2) }
 
   it 'answer is mark best' do
     answer3.mark_as_best
@@ -33,5 +36,10 @@ RSpec.describe Answer, type: :model do
 
   it 'have many attached files' do
     expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+  end
+
+  it 'add badge for the best answer' do
+    answer4.mark_as_best
+    expect(answer4.user).to eq(badge.user)
   end
 end

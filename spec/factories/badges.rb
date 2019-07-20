@@ -4,6 +4,6 @@ FactoryBot.define do
   end
 
   trait :with_image do
-    image { Rack::Test::UploadedFile.new("#{Rails.root}/spec/rails_helper.rb") }
+    image { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'rails_helper.rb')) }
   end
 end
