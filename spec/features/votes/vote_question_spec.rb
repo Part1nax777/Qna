@@ -9,6 +9,7 @@ feature 'User can vote to question', %q{
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given!(:question) { create(:question, user: user) }
+  given!(:another_question) { create(:question, user: another_user) }
 
   describe 'Authenicated user', js: true do
 
@@ -32,6 +33,31 @@ feature 'User can vote to question', %q{
         expect(find('.rating')).to have_content "-1"
       end
     end
+
+    scenario 'not can vote like twice' do
+      within ".question-#{question.id}" do
+        click_on 'like'
+        click_on 'like'
+
+        expect(find('.rating')).to have_content "1"
+      end
+    end
+
+    scenario 'not can vote dislike twice' do
+      within ".question-#{question.id}" do
+        click_on 'dislike'
+        click_on 'dislike'
+
+        expect(find('.rating')).to have_content "1"
+      end
+    end
+
+    scenario 'not can vote for his question' do
+      visit question_path(another_question)
+
+      expect(page).to_not have_content 'like'
+      expect(page).to_not have_content 'dislike'
+    end
   end
 
   describe 'Unauthenticate user', js: true do
@@ -39,8 +65,8 @@ feature 'User can vote to question', %q{
     scenario 'don\'t can vote' do
       visit question_path(question)
 
-        expect(page).to_not have_content 'like'
-        expect(page).to_not have_content 'dislike'
+      expect(page).to_not have_content 'like'
+      expect(page).to_not have_content 'dislike'
     end
   end
 end

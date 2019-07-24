@@ -21,6 +21,7 @@ RSpec.describe Question, type: :model do
   it_behaves_like 'votable' do
     let(:user) { create :user }
     let(:user2) { create :user }
+    let(:user3) { create :user }
     let(:question) { create :question, user: user }
     let(:model) { create :question, user: user }
   end

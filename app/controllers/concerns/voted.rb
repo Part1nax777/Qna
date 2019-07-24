@@ -27,7 +27,7 @@ module Voted
                      resourceId: @object.id,
                      resourceScore: @object.score_result }
     else
-      render :forbidden
+      head :forbidden
     end
   end
 end

@@ -10,6 +10,7 @@ feature 'User can vote to answer', %q{
   given(:another_user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
+  given!(:another_answer) { create(:answer, question: question, user: another_user) }
 
   describe 'Authenicated user', js: true do
 
@@ -31,6 +32,32 @@ feature 'User can vote to answer', %q{
         click_on 'dislike'
 
         expect(find('.rating')).to have_content "-1"
+      end
+    end
+
+    scenario 'not can vote like twice' do
+      within ".answer-#{answer.id}" do
+        click_on 'like'
+        click_on 'like'
+
+      expect(find('.rating')).to have_content "1"
+      end
+    end
+
+    scenario 'not can vote dislike twice' do
+      within ".answer-#{answer.id}" do
+        click_on 'dislike'
+        click_on 'dislike'
+
+        expect(find('.rating')).to have_content "1"
+      end
+    end
+
+    scenario 'not can vote for his answer' do
+      within ".answer-#{another_answer.id}" do
+
+      expect(page).to_not have_content 'like'
+      expect(page).to_not have_content 'dislike'
       end
     end
   end

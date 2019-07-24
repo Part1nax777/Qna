@@ -18,5 +18,19 @@ RSpec.shared_examples 'voted' do
     it 'unauthenticate user try vote' do
       expect { (patch :vote_like, params: { id: model }, format: :json).to_not change(Vote, :count) }
     end
+
+    it 'user try vote like for his resource' do
+      login(user)
+      patch :vote_like, params: { id: model }, format: :json
+
+      expect(response).to have_http_status :forbidden
+    end
+
+    it 'user try vote dislike for his resource' do
+      login(user)
+      patch :vote_dislike, params: { id: model }, format: :json
+
+      expect(response).to have_http_status :forbidden
+    end
   end
 end
