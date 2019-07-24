@@ -3,6 +3,8 @@
     = link_to 'like', polymorphic_path(resource, action: :vote_like), method: :patch, remote: true, data: { type: :json }
     '
     = link_to 'dislike', polymorphic_path(resource, action: :vote_dislike), method: :patch, remote: true, data: { type: :json }
+    '
+    = link_to 'cancel', polymorphic_path(resource, action: :revote), method: :delete, remote: true, data: { type: :json }
 
 .rating
   = resource.score_result

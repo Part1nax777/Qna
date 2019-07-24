@@ -17,10 +17,14 @@ module Votable
     vote(user, -1)
   end
 
+  def revote(user)
+    vote(user, 0)
+  end
+
   private
 
   def double_voit?(user, counter)
-    user_vote(user)&.rating = counter
+    user_vote(user)&.rating != counter
   end
 
   def user_vote(user)
@@ -28,7 +32,7 @@ module Votable
   end
 
   def vote(user, counter)
-    return false if user.author_of?(self) || double_voit?(user, counter)
+    return false if user.author_of?(self) || !double_voit?(user, counter)
     votes.find_by(user: user).destroy if user_vote(user)
     votes.create(user: user, rating: counter)
   end

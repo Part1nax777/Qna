@@ -58,6 +58,15 @@ feature 'User can vote to question', %q{
       expect(page).to_not have_content 'like'
       expect(page).to_not have_content 'dislike'
     end
+
+    scenario 'can cancel vote for his question' do
+      within ".question-#{question.id}" do
+        click_on 'like'
+        click_on 'cancel'
+
+        expect(find('.rating')).to have_content "0"
+      end
+    end
   end
 
   describe 'Unauthenticate user', js: true do

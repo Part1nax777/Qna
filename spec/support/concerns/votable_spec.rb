@@ -53,4 +53,12 @@ RSpec.shared_examples 'votable' do
 
     expect(model.score_result).to_not eq(-1)
   end
+
+  it 'author can cancel vote' do
+    model.vote_like(user2)
+    model.revote(user2)
+    model.reload
+
+    expect(model.score_result).to eq(0)
+  end
 end

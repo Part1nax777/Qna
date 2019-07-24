@@ -9,6 +9,10 @@ module Voted
     make_vote(:vote_dislike)
   end
 
+  def revote
+    make_vote(:revote)
+  end
+
   private
 
   def model_klass

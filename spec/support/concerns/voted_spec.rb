@@ -32,5 +32,14 @@ RSpec.shared_examples 'voted' do
 
       expect(response).to have_http_status :forbidden
     end
+
+    it 'user try cancel vote for his resource' do
+      login(another_user)
+
+      patch :vote_like, params: { id: model }, format: :json
+      delete :revote, params: { id: model }, format: :json
+
+      expect(model.score_result).to eq 0
+    end
   end
 end
