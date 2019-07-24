@@ -1,6 +1,12 @@
 div id = "answer-#{answer.id}" class=('best' if answer.best)
 
   p= answer.body
+
+  div class="answer-#{answer.id}"
+
+    - if user_signed_in?
+      = render partial: 'votes/vote', locals: { resource: answer }
+
   .links
     p Links:
     ul
