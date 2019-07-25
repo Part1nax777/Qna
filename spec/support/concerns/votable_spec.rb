@@ -64,4 +64,14 @@ RSpec.shared_examples 'votable' do
 
     expect(model.score_result).to eq(0)
   end
+
+  it 'like answer/question with id = 1' do
+    question_resource.update(id: 1)
+    answer_resource.update(id: 1)
+    question_resource.vote_like(user2)
+    answer_resource.vote_like(user2)
+    model.reload
+
+    expect(answer_resource.score_result).to eq(1)
+  end
 end

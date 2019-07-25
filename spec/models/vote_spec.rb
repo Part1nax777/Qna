@@ -10,6 +10,6 @@ RSpec.describe Vote, type: :model do
 
   it 'vote is uniq for user' do
     subject.user = create(:user)
-    should validate_uniqueness_of(:user_id).scoped_to([:votable_id])
+    should validate_uniqueness_of(:user_id).scoped_to([:votable_id, :votable_type])
   end
 end

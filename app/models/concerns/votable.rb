@@ -35,7 +35,7 @@ module Votable
     return false if user.author_of?(self)
     return false unless double_voit?(user, counter)
 
-    user_vote(user)&.destroy
+    user_vote(user)&.destroy!
     votes.create!(user: user, rating: counter)
   end
 end
