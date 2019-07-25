@@ -48,7 +48,7 @@ feature 'User can vote to question', %q{
         click_on 'dislike'
         click_on 'dislike'
 
-        expect(find('.rating')).to have_content "1"
+        expect(find('.rating')).to have_content "-1"
       end
     end
 

@@ -7,4 +7,9 @@ RSpec.describe Vote, type: :model do
   it 'default 0' do
     expect(Vote.new.rating).to eq(0)
   end
+
+  it 'vote is uniq for user' do
+    subject.user = create(:user)
+    should validate_uniqueness_of(:user_id).scoped_to([:votable_id])
+  end
 end

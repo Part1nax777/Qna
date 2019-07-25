@@ -32,8 +32,10 @@ module Votable
   end
 
   def vote(user, counter)
-    return false if user.author_of?(self) || !double_voit?(user, counter)
-    votes.find_by(user: user).destroy if user_vote(user)
-    votes.create(user: user, rating: counter)
+    return false if user.author_of?(self)
+    return false unless double_voit?(user, counter)
+
+    user_vote(user)&.destroy
+    votes.create!(user: user, rating: counter)
   end
 end

@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.shared_examples 'votable' do
+  let(:user) { create :user }
+  let(:user2) { create :user }
+  let(:user3) { create :user }
 
   it '#vote like' do
     model.vote_like(user2)

@@ -1,22 +1,32 @@
 require 'rails_helper'
 
 RSpec.shared_examples 'voted' do
+  let(:user) { create :user }
+  let(:another_user) { create :user }
 
   describe 'PATCH #vote' do
     it 'user can like' do
       login(another_user)
 
-      expect { (patch :vote_like, params: { id: model }, format: :json).to change(Vote, :count).by 1 }
+      expect do
+        patch :vote_like, params: { id: model }, format: :json
+        model.reload
+      end.to change(model.votes, :count).by(1)
     end
 
     it 'user can dislike' do
       login(another_user)
 
-      expect { (patch :vote_dislike, params: { id: model }, format: :json).to change(Vote, :count).by 1 }
+      expect do
+        patch :vote_dislike, params: { id: model }, format: :json
+        model.reload
+      end.to change(model.votes, :count).by(1)
     end
 
     it 'unauthenticate user try vote' do
-      expect { (patch :vote_like, params: { id: model }, format: :json).to_not change(Vote, :count) }
+      expect do
+        patch :vote_like, params: { id: model }, format: :json
+      end.to_not change(model.votes, :count)
     end
 
     it 'user try vote like for his resource' do
