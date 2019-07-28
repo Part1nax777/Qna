@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: [:show, :index]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
+  after_action :publish_question, only: [:create]
 
   def index
     @questions = Question.all
@@ -52,5 +53,13 @@ class QuestionsController < ApplicationController
                                      files: [],
                                      links_attributes: [:name, :url],
                                      badge_attributes: [:name, :image])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast 'questions',
+                                 ApplicationController.render( partial: 'questions/questions_links',
+                                 locals: { question: @question })
+
   end
 end

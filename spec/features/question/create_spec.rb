@@ -43,9 +43,31 @@ feature 'Authenticated user can create question', %q{
     end
   end
 
-  scenario 'Unauthenticated user tries to ask a question' do
-    visit questions_path
-    click_on 'Ask question'
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  describe 'multiple sessions', js: true do
+    scenario 'the question is added by other users' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit questions_path
+      end
+
+      Capybara.using_session('another_user') do
+        visit questions_path
+      end
+
+      Capybara.using_session('user') do
+        click_on 'Ask question'
+
+        fill_in 'Title', with: 'Question title'
+        fill_in 'Body', with: 'Question body'
+        click_on 'Ask'
+
+        expect(page).to have_content 'Question title'
+        expect(page).to have_content 'Question body'
+      end
+
+      Capybara.using_session('another_user') do
+        expect(page).to have_link 'Question title'
+      end
+    end
   end
 end
