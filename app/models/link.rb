@@ -16,8 +16,6 @@ class Link < ApplicationRecord
     gist.files.to_hash.first[1][:content]
   end
 
-  private
-
   def gist
     gist_url = url.split('/').last
     GistService.new(gist_url).call

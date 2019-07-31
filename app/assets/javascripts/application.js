@@ -16,6 +16,7 @@
 //= require jquery3
 //= require cocoon
 //= require action_cable
+//= require skim
 //= require_tree .
 
 var App = App || {};

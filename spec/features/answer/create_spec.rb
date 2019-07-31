@@ -47,4 +47,35 @@ feature 'Authenticated user can create answer', %q{
     expect(page).to_not have_content 'answer body'
     expect(page).to have_content 'You need to sign in or sign up before continuing'
   end
+
+  describe 'multiply session', js: true do
+    scenario 'the answer is added by other users' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('another_user') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Body', with: 'Answer body'
+        attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb"]
+        fill_in 'Link name', with: 'google'
+        fill_in 'Url', with: 'http://google.com'
+        click_on 'Create answer'
+
+        expect(page).to have_content 'Answer body'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'google'
+      end
+
+      Capybara.using_session('another_user') do
+        expect(page).to have_content 'Answer body'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'google'
+      end
+    end
+  end
 end

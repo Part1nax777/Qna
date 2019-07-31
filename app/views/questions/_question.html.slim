@@ -1,4 +1,4 @@
-h1= question.title
+h1=question.title
 p= question.body
 
 div class="question-#{question.id}"
@@ -8,7 +8,7 @@ div class="question-#{question.id}"
 
 = render partial: 'show_question_files', locals: { question: question }
 
-.question
+.question id=question.id
   - if current_user&.author_of?(question)
 
     = link_to 'Edit question', '#', class: 'edit-question-link'

@@ -1,0 +1,26 @@
+div class="answer-#{@answer.id}"
+
+  p= @answer.body
+
+  - if gon.user_id?
+    .vote
+      a class='vote' data-remote='true' data-method='patch' href="/answers/#{@answer.id}/vote_like" like
+      '
+      a class='vote' data-remote='true' data-method='patch' href="/answers/#{@answer.id}/vote_dislike" dislike
+      '
+      a class='vote' data-remote='true' data-method='delete' href="/answers/#{@answer.id}/revote" cancel
+
+  - if @links.length != 0
+    .links
+      p Links:
+      ul
+        - for link in @links
+          li
+            a href="#{link.url}" #{link.name}
+
+  - if @files.length != 0
+    .file
+      p Files:
+      - for file in @files
+        p
+        a href="#{file.url}" #{file.name}
