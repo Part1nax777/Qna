@@ -28,3 +28,8 @@ div class="question-#{question.id}"
     p= link_to 'Delete question',
             question_path(question),
             method: :delete
+
+.question-comments class="comments-#{question.id}"
+  - if user_signed_in?
+    = render partial: 'comments/comment_form', locals: { resource: question }
+    = render question.comments

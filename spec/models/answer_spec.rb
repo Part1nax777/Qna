@@ -9,6 +9,7 @@ RSpec.describe Answer, type: :model do
 
   it { should accept_nested_attributes_for :links }
 
+
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
   let(:question) { create(:question, user: user) }

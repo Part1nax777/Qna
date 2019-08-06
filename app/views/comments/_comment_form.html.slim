@@ -1,0 +1,4 @@
+= form_with model: [resource, Comment.new], remote: true do |f|
+  p= f.label :body, 'Comment'
+  p= f.text_area :body
+  = f.submit 'Create comment'

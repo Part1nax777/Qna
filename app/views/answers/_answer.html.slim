@@ -20,6 +20,11 @@ div id = "answer-#{answer.id}" class=('best' if answer.best)
           - if current_user&.author_of?(link.linkable)
             = link_to 'Delete link', link_path(link), method: :delete, remote: true
 
+  .answer-comments class="comments-#{answer.id}"
+    - if user_signed_in?
+      = render partial: 'comments/comment_form', locals: { resource: answer }
+      = render answer.comments
+
   = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
     p= f.label :body, 'You answer'
     = f.text_area :body
