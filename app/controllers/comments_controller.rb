@@ -1,10 +1,10 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_resource, only: :create
+  before_action :set_commentable, only: :create
   after_action :publish_comment, only: [:create]
 
   def create
-    @comment = @resource.comments.new(comments_params)
+    @comment = @commentable.comments.new(comments_params)
     @comment.user = current_user
     if @comment.save
       render json: @comment
@@ -15,9 +15,9 @@ class CommentsController < ApplicationController
 
   private
 
-  def set_resource
+  def set_commentable
     data = resource_params
-    @resource = data[:klass].find(data[:id])
+    @commentable = data[:klass].find(data[:id])
   end
 
   def resource_params
