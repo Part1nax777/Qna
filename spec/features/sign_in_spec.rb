@@ -22,5 +22,19 @@ feature 'User can sign in', %q{
     click_on 'Log in'
     expect(page).to have_content 'Invalid Email or password.'
   end
+
+  scenario 'User can registered with GitHub' do
+    mock_auth_hash
+    click_on 'Sign in with GitHub'
+
+    expect(page).to have_content 'Successfully authenticated from Github account.'
+  end
+
+  scenario 'User can registered with Yandex' do
+    mock_auth_hash
+    click_on 'Sign in with Yandex'
+
+    expect(page).to have_content 'Successfully authenticated from Yandex account.'
+  end
 end
 
