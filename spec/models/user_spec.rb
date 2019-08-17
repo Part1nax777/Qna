@@ -35,4 +35,13 @@ RSpec.describe User, type: :model do
       User.find_for_oauth(auth)
     end
   end
+
+  describe '#create authorization' do
+    let(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456') }
+
+    it 'save new authorization in db' do
+      expect { user.create_authorization!(auth) }.to change(Authorization, :count).by(1)
+    end
+  end
 end
