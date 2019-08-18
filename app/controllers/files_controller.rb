@@ -10,5 +10,6 @@ class FilesController < ApplicationController
 
   def load_attachment
     @attachment = ActiveStorage::Attachment.find(params[:id])
+    authorize! :destroy, @attachment
   end
 end

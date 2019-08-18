@@ -45,7 +45,7 @@ feature 'Authenticated user can create answer', %q{
     fill_in 'Body', with: 'answer body'
     click_on 'Create answer'
     expect(page).to_not have_content 'answer body'
-    expect(page).to have_content 'You need to sign in or sign up before continuing'
+    expect(page).to have_content 'You are not authorized to access this page'
   end
 
   describe 'multiply session', js: true do

@@ -43,9 +43,9 @@ RSpec.describe FilesController, type: :controller do
         expect { delete :destroy, params: { id: question.files.first}, format: :js }.to_not change(ActiveStorage::Attachment, :count)
       end
 
-      it 'render template destroy ' do
+      it 'response status 302' do
         delete :destroy, params: { id: question.files.first}, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to have_http_status 302
       end
     end
   end

@@ -35,12 +35,12 @@ div id = "answer-#{answer.id}" class=('best' if answer.best)
       = link_to_add_association 'add link', f, :links, partial: 'shared/link_template'
     p= f.submit 'Save'
 
-  - if current_user&.author_of?(answer)
+  - if can?(:update, answer)
 
     p= link_to 'Edit', '#', class: 'edit-answer-link', data: {answer_id: answer.id}
     p= link_to 'Delete answer', answer, method: :delete, remote: true
 
-  - if current_user&.author_of?(answer.question)
+  - if can?(:update, answer.question)
     p= link_to 'Best answer', mark_as_best_answer_path(answer), class: 'mark-as-best', data: { answer_id: answer.id }, method: :patch, remote: true
 
   - if answer.files.attached?

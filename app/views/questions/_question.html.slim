@@ -9,7 +9,7 @@ div class="question-#{question.id}"
 = render partial: 'show_question_files', locals: { question: question }
 
 .question id=question.id
-  - if current_user&.author_of?(question)
+  - if can?(:update, question)
 
     = link_to 'Edit question', '#', class: 'edit-question-link'
 

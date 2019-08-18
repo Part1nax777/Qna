@@ -3,5 +3,5 @@
     div id=file.id class='file'
       p
         = link_to file.filename.to_s, url_for(file)
-        - if current_user&.author_of?(question)
+        - if can?(:destroy, question)
           p= link_to 'Delete file', file_path(file), method: :delete, remote: true

@@ -1,4 +1,4 @@
-- unless current_user&.author_of?(resource)
+- unless can?(:update, resource)
   .vote
     = link_to 'like', polymorphic_path(resource, action: :vote_like), method: :patch, remote: true, data: { type: :json }
     '

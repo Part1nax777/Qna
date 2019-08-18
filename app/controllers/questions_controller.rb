@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   include Voted
 
+  authorize_resource
+
   before_action :authenticate_user!, except: [:show, :index]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
   after_action :publish_question, only: [:create]

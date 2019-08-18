@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
   include Voted
 
+  authorize_resource
+
   before_action :authenticate_user!
   before_action :load_question, only: [:create]
   before_action :load_answer, only: [:update, :destroy, :mark_as_best]
