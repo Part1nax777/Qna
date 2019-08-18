@@ -15,9 +15,10 @@ class Services::FindForOauth
       user.create_authorization!(auth)
     else
       password = Devise.friendly_token[0, 20]
-      user = User.create!(email: email, password: password, password_confirmation: password)
-      user.save!
-      user.create_authorization!(auth)
+      ActiveRecord::Base.transaction do
+        user = User.create!(email: email, password: password, password_confirmation: password)
+        user.create_authorization!(auth)
+      end
     end
     user
   end
