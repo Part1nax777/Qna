@@ -2,7 +2,9 @@ class ApplicationController < ActionController::Base
   before_action :gon_user
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_url, alert: exception.message
+    format.html { redirect_to root_url, alert: exception.message }
+    format.json { render status: :forbidden }
+    format.js { render json: exception.message, status: :forbidden }
   end
 
   check_authorization unless :devise_controller?

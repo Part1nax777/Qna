@@ -8,11 +8,8 @@ class Ability
   def initialize(user)
     @user = user
 
-    if user
-      user.admin? ? admin_role : user_role
-    else
-      guest_role
-    end
+    return guest_role unless @user
+    @user.admin? ? admin_role : user_role
   end
 
   private
