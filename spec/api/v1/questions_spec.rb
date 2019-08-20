@@ -58,4 +58,70 @@ describe 'Questions API', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/questions/:id' do
+    let(:user) { create(:user) }
+    let!(:question) { create(:question, user: user, files: fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")) }
+    let!(:comment) { create(:question_comment, commentable: question, user: user) }
+    let!(:link) { create(:link, linkable: question, url: "http://ya.ru") }
+    let!(:file) { fixture_file_upload("#{Rails.root}/spec/rails_helper.rb") }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+      let(:question_response) { json['question'] }
+
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+      it_behaves_like 'Return status'
+
+      it_behaves_like 'Return fields' do
+        let(:fields) { %w[id title body created_at updated_at] }
+        let(:resource_response) { question_response }
+        let(:resource_name) { question }
+      end
+
+      describe 'comments' do
+        let(:comment_response) { question_response['comments'].first }
+
+        it 'Return object of resource' do
+          expect(question_response['comments'].size).to eq 1
+        end
+
+        it_behaves_like 'Return fields' do
+          let(:fields) { %w[id body user_id created_at updated_at commentable_type commentable_id] }
+          let(:resource_response) { comment_response }
+          let(:resource_name) { comment }
+        end
+      end
+
+      describe 'links' do
+        let(:link_response) { question_response['links'].first }
+
+        it 'Return object of resource' do
+          expect(question_response['links'].size).to eq 1
+        end
+
+        it_behaves_like 'Return fields' do
+          let(:fields) { %w[id name url created_at updated_at linkable_type linkable_id] }
+          let(:resource_response) { link_response }
+          let(:resource_name) { link }
+        end
+      end
+
+      describe 'files' do
+        it 'Return object of resource' do
+          expect(question_response['files'].size).to eq 1
+        end
+
+        it 'url match file name' do
+          expect(question_response['files'].first).to match '/rails_helper.rb'
+        end
+      end
+    end
+  end
 end

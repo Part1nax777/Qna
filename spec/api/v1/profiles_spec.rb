@@ -16,9 +16,7 @@ describe 'Profiles API', type: :request do
 
       before { get '/api/v1/profiles/me', params: { access_token: access_token.token }, headers: headers }
 
-      it 'return 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Return status'
 
       it_behaves_like 'Return fields' do
         let(:fields) { %w[id email admin created_at updated_at] }
@@ -49,14 +47,16 @@ describe 'Profiles API', type: :request do
 
       before { get '/api/v1/profiles', params: { access_token: access_token.token }, headers: headers }
 
-      it 'return 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Return status'
 
       it_behaves_like 'Return fields' do
         let(:fields) { %w[id email admin created_at updated_at] }
         let(:resource_response) { user_response }
         let(:resource_name) { user }
+      end
+
+      it_behaves_like 'Return list of' do
+        let(:json_resource) { users }
       end
 
     end
