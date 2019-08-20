@@ -20,10 +20,10 @@ describe 'Profiles API', type: :request do
         expect(response).to be_successful
       end
 
-      it 'return all public fields' do
-        %w[id email admin created_at updated_at].each do |attr|
-          expect(json[attr]).to eq me.send(attr).as_json
-        end
+      it_behaves_like 'Return fields' do
+        let(:fields) { %w[id email admin created_at updated_at] }
+        let(:resource_response) { json['user'] }
+        let(:resource_name) { me }
       end
 
       it 'does not return all public fields' do
@@ -32,6 +32,33 @@ describe 'Profiles API', type: :request do
         end
       end
     end
+  end
 
+  describe 'Get /api/v1/profiles' do
+    let(:api_path) { '/api/v1/profiles' }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'authorized' do
+      let(:access_token) { create :access_token }
+      let!(:users) { create_list(:user, 2) }
+      let(:user) { users.first }
+      let(:user_response) { json['users'].first }
+
+      before { get '/api/v1/profiles', params: { access_token: access_token.token }, headers: headers }
+
+      it 'return 200 status' do
+        expect(response).to be_successful
+      end
+
+      it_behaves_like 'Return fields' do
+        let(:fields) { %w[id email admin created_at updated_at] }
+        let(:resource_response) { user_response }
+        let(:resource_name) { user }
+      end
+
+    end
   end
 end
