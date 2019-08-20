@@ -16,7 +16,7 @@ describe 'Questions API', type: :request do
       let!(:questions) { create_list(:question, 2, user: user) }
       let(:question) { questions.first }
       let(:question_response) { json['questions'].first }
-      let!(:answers) { create_list(:answer, 3, question: question, user: user) }
+      let!(:answers) { create_list(:answer, 2, question: question, user: user) }
 
       before { get '/api/v1/questions', params: { access_token: access_token.token }, headers: headers }
 
@@ -46,14 +46,14 @@ describe 'Questions API', type: :request do
         let(:answer) { answers.first }
         let(:answer_response) { question_response['answers'].first }
 
-        it 'return list of answers' do
-          expect(question_response['answers'].size).to eq 3
+        it_behaves_like 'Return list of' do
+          let(:json_resource) { question_response['answers'] }
         end
 
-        it 'return all public fields' do
-          %w[id body user_id created_at updated_at].each do |attr|
-            expect(answer_response[attr]).to eq answer.send(attr).as_json
-          end
+        it_behaves_like 'Return fields' do
+          let(:fields) { %w[id body question_id created_at updated_at] }
+          let(:resource_response) { answer_response}
+          let(:resource_name) { answer }
         end
       end
     end
@@ -64,7 +64,6 @@ describe 'Questions API', type: :request do
     let!(:question) { create(:question, user: user, files: fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")) }
     let!(:comment) { create(:question_comment, commentable: question, user: user) }
     let!(:link) { create(:link, linkable: question, url: "http://ya.ru") }
-    let!(:file) { fixture_file_upload("#{Rails.root}/spec/rails_helper.rb") }
     let(:api_path) { "/api/v1/questions/#{question.id}" }
 
     it_behaves_like 'API Authorizable' do
