@@ -21,7 +21,7 @@ describe 'Answers API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it_behaves_like 'Return list of' do
         let(:json_resource) { json['answers'] }
@@ -53,7 +53,7 @@ describe 'Answers API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it_behaves_like 'Return fields' do
         let(:fields) { %w[id body question_id created_at updated_at] }
@@ -64,8 +64,8 @@ describe 'Answers API', type: :request do
       describe 'comments' do
         let(:comment_response) { answer_response['comments'].first }
 
-        it 'Return object of resource' do
-          expect(answer_response['comments'].size).to eq 1
+        it_behaves_like 'Return object of resource' do
+          let(:json_resource) { answer_response['comments'] }
         end
 
         it_behaves_like 'Return fields' do
@@ -78,8 +78,8 @@ describe 'Answers API', type: :request do
       describe 'links' do
         let(:link_response) { answer_response['links'].first }
 
-        it 'Return object of resource' do
-          expect(answer_response['links'].size).to eq 1
+        it_behaves_like 'Return object of resource' do
+          let(:json_resource) { answer_response['links'] }
         end
 
         it_behaves_like 'Return fields' do
@@ -90,8 +90,9 @@ describe 'Answers API', type: :request do
       end
 
       describe 'files' do
-        it 'Return object of resource' do
-          expect(answer_response['files'].size).to eq 1
+
+        it_behaves_like 'Return object of resource' do
+          let(:json_resource) { answer_response['files'] }
         end
 
         it 'url match file name' do
@@ -115,7 +116,7 @@ describe 'Answers API', type: :request do
     context 'create answer with valid attributes' do
       before { post api_path, params: { access_token: access_token.token, answer: { body: 'Body', question: question } }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it 'add answer to db' do
         expect(Answer.count).to eq 1
@@ -157,7 +158,7 @@ describe 'Answers API', type: :request do
     context 'update answer with valid attributes' do
       before { patch api_path, params: { access_token: access_token.token, answer: { body: 'Body' } }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it 'return fields with modify data' do
         %w[id body created_at updated_at].each do |attr|
@@ -194,7 +195,7 @@ describe 'Answers API', type: :request do
     context 'authorized' do
       before { delete api_path, params: { access_token: access_token.token, answer: answer }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it 'delete answer from db' do
         expect(Answer.count).to eq 0

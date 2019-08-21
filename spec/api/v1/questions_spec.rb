@@ -18,11 +18,9 @@ describe 'Questions API', type: :request do
       let(:question_response) { json['questions'].first }
       let!(:answers) { create_list(:answer, 2, question: question, user: user) }
 
-      before { get '/api/v1/questions', params: { access_token: access_token.token }, headers: headers }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'return 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Return status 200'
 
       it 'return list of questions' do
         expect(json['questions'].size).to eq 2
@@ -76,7 +74,7 @@ describe 'Questions API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it_behaves_like 'Return fields' do
         let(:fields) { %w[id title body created_at updated_at] }
@@ -87,8 +85,8 @@ describe 'Questions API', type: :request do
       describe 'comments' do
         let(:comment_response) { question_response['comments'].first }
 
-        it 'Return object of resource' do
-          expect(question_response['comments'].size).to eq 1
+        it_behaves_like 'Return object of resource' do
+          let(:json_resource) { question_response['comments'] }
         end
 
         it_behaves_like 'Return fields' do
@@ -101,8 +99,8 @@ describe 'Questions API', type: :request do
       describe 'links' do
         let(:link_response) { question_response['links'].first }
 
-        it 'Return object of resource' do
-          expect(question_response['links'].size).to eq 1
+        it_behaves_like 'Return object of resource' do
+          let(:json_resource) { question_response['links'] }
         end
 
         it_behaves_like 'Return fields' do
@@ -113,8 +111,9 @@ describe 'Questions API', type: :request do
       end
 
       describe 'files' do
-        it 'Return object of resource' do
-          expect(question_response['files'].size).to eq 1
+
+        it_behaves_like 'Return object of resource' do
+          let(:json_resource) { question_response['files'] }
         end
 
         it 'url match file name' do
@@ -146,7 +145,7 @@ describe 'Questions API', type: :request do
     context 'create question with valid attributes' do
       before { post api_path, params: { access_token: access_token.token, question: attributes_for(:question) } }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it 'save question in db' do
         expect(Question.count).to eq 1
@@ -196,7 +195,7 @@ describe 'Questions API', type: :request do
     context 'Update question with valid attributes' do
       before { patch api_path, params: { access_token: access_token.token, question: { title: 'Title' } } }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it 'return fields with update data' do
         %w[id title body created_at updated_at].each do |attr|
@@ -246,7 +245,7 @@ describe 'Questions API', type: :request do
     context 'authorized' do
       before { delete api_path, params: { access_token: access_token.token, question: question } }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it 'delete question in db' do
         expect(Question.count).to eq 0

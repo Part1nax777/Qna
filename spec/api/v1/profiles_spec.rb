@@ -17,7 +17,7 @@ describe 'Profiles API', type: :request do
     context 'authorize' do
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it_behaves_like 'Return fields' do
         let(:fields) { %w[id email admin created_at updated_at] }
@@ -48,7 +48,7 @@ describe 'Profiles API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it_behaves_like 'Return status'
+      it_behaves_like 'Return status 200'
 
       it_behaves_like 'Return fields' do
         let(:fields) { %w[id email admin created_at updated_at] }
