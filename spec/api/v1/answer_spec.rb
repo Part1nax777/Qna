@@ -97,9 +97,7 @@ describe 'Answers API', type: :request do
         it 'url match file name' do
           expect(answer_response['files'].first).to match '/rails_helper.rb'
         end
-
       end
     end
-
   end
 end
