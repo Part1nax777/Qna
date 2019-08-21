@@ -100,4 +100,106 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'POST /api/v1/questions/:id/answers' do
+    let(:user) { create(:user) }
+    let!(:question) { create(:question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
+    let(:access_token) { create(:access_token) }
+    let(:headers) { { "ACCEPT" => 'application/json' } }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :post }
+    end
+
+    context 'create answer with valid attributes' do
+      before { post api_path, params: { access_token: access_token.token, answer: { body: 'Body', question: question } }, headers: headers }
+
+      it_behaves_like 'Return status'
+
+      it 'add answer to db' do
+        expect(Answer.count).to eq 1
+      end
+
+      it 'return fields of new object' do
+        %w[id body created_at updated_at].each do |attr|
+          expect(json['answer'].has_key?(attr)).to be_truthy
+        end
+      end
+    end
+
+
+    context 'create answer with invalid attributes' do
+      before { post api_path, params: { access_token: access_token.token, answer: { body: nil, question: question } }, headers: headers }
+
+      it 'Return status 422' do
+        expect(response.status).to eq 422
+      end
+
+      it 'return error for body' do
+        expect(json.has_key?('body')).to be_truthy
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/answers/:id' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:answer) { create(:answer, question: question, user: user) }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:headers) { { "ACCEPT" => 'application/json' } }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :patch }
+    end
+
+    context 'update answer with valid attributes' do
+      before { patch api_path, params: { access_token: access_token.token, answer: { body: 'Body' } }, headers: headers }
+
+      it_behaves_like 'Return status'
+
+      it 'return fields with modify data' do
+        %w[id body created_at updated_at].each do |attr|
+          expect(json['answer'].has_key?(attr)).to be_truthy
+        end
+      end
+    end
+
+    context 'update answer with invalid attributes' do
+      before { patch api_path, params: { access_token: access_token.token, answer: { body: nil } }, headers: headers }
+
+      it 'return status 422' do
+        expect(response.status).to eq 422
+      end
+
+      it 'return error for body' do
+        expect(json.has_key?('body')).to be_truthy
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/answers/:id' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:answer) { create(:answer, user: user, question: question) }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let(:headers) { { "ACCEPT" => 'application/json' } }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :delete }
+    end
+
+    context 'authorized' do
+      before { delete api_path, params: { access_token: access_token.token, answer: answer }, headers: headers }
+
+      it_behaves_like 'Return status'
+
+      it 'delete answer from db' do
+        expect(Answer.count).to eq 0
+      end
+
+    end
+  end
 end
