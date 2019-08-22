@@ -24,4 +24,14 @@ RSpec.describe Question, type: :model do
     let(:question_resource) { create :question, user: user }
     let(:answer_resource) { create :answer, question: question_resource, user: user }
   end
+
+  describe 'reputation' do
+    let(:user) { create(:user) }
+    let(:question) { build(:question, user: user) }
+
+    it 'calls ReputationJob' do
+      expect(ReputationJob).to receive(:perform_later).with(question)
+      question.save!
+    end
+  end
 end
