@@ -18,7 +18,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
     @answer.user = current_resource_owner
 
     if @answer.save
-      render json: @answer, status: :ok
+      render json: @answer, status: :created
     else
       render json: @answer.errors, status: :unprocessable_entity
     end
@@ -34,9 +34,9 @@ class Api::V1::AnswersController < Api::V1::BaseController
 
   def destroy
     if @answer.destroy
-      render json: 'answer delete', status: :ok
+      head :ok
     else
-      render json: 'something wrong', status: :forbidden
+      head :forbidden
     end
   end
 
