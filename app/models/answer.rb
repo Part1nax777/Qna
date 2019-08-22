@@ -14,6 +14,7 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_create :send_mail_to_author
 
   def mark_as_best
     transaction do
@@ -21,5 +22,11 @@ class Answer < ApplicationRecord
       update!(best: true)
       question.badge&.update!(user: user)
     end
+  end
+
+  private
+
+  def send_mail_to_author
+    NewAnswerMailer.new_answer(self).deliver_later
   end
 end

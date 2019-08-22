@@ -43,4 +43,14 @@ RSpec.describe Answer, type: :model do
     answer4.mark_as_best
     expect(answer4.user).to eq(badge.user)
   end
+
+  describe 'answer mailer' do
+    let(:user) { create(:user) }
+    let(:question) { build(:question, user: user) }
+
+    it 'send answer to autor of question' do
+      expect(NewAnswerMailer).to receive(:new_answer).and_call_original
+      create(:answer, question: question, user: user)
+    end
+  end
 end
