@@ -7,6 +7,8 @@ class Question < ApplicationRecord
   has_many_attached :files
   has_one :badge, dependent: :destroy
   belongs_to :user
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
 
   accepts_nested_attributes_for :links, reject_if: :all_blank
   accepts_nested_attributes_for :badge, reject_if: :all_blank
