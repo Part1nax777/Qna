@@ -16,11 +16,15 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
   validates :title, length: { maximum: 255 }
 
-  after_create :calculate_reputation
+  after_create :calculate_reputation, :subscribe_user
 
   private
 
   def calculate_reputation
     ReputationJob.perform_later(self)
+  end
+
+  def subscribe_user
+    subscriptions.create(user: user)
   end
 end

@@ -1,0 +1,2 @@
+$('#<%= question.id %>.subscribe-option').empty();
+$('#<%= question.id %>.subscribe-option').html("<%= j render 'subscriptions/subscription', resource: question %>");

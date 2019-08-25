@@ -16,6 +16,8 @@ class Answer < ApplicationRecord
 
   after_create :send_mail_to_author
 
+  after_create :notify_about_new_answer
+
   def mark_as_best
     transaction do
       question.answers.where(best: true).update_all(best: false)
@@ -28,5 +30,9 @@ class Answer < ApplicationRecord
 
   def send_mail_to_author
     NewAnswerMailer.new_answer(self).deliver_later
+  end
+
+  def notify_about_new_answer
+    NewAnswerNotifierJob.perform_later(self)
   end
 end

@@ -49,8 +49,8 @@ RSpec.describe Answer, type: :model do
     let(:question) { build(:question, user: user) }
 
     it 'send answer to autor of question' do
-      expect(NewAnswerMailer).to receive(:new_answer).and_call_original
-      create(:answer, question: question, user: user)
+      expect(NewAnswerNotifierJob).to receive(:perform_later).with(instance_of(Answer))
+      Answer.create(question: question, user: user, body: 'new answer')
     end
   end
 end

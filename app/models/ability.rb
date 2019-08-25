@@ -25,9 +25,9 @@ class Ability
   def user_role
     guest_role
     can :read, :all
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, Subscription]
     can :update, [Question, Answer], user: user
-    can :destroy, [Question, Answer], user: user
+    can :destroy, [Question, Answer, Subscription], user: user
 
     can [:vote_like, :vote_dislike, :revote], [Question, Answer] do |resource|
       !user.author_of?(resource)

@@ -5,9 +5,9 @@ class NewAnswerMailer < ApplicationMailer
   #
   #   en.new_answer_mailer.digest.subject
   #
-  def new_answer(answer)
+  def new_answer(user, answer)
     @answer = answer
 
-    mail to: answer.question.user.email, subject: "New answer to your question"
+    mail to: user.email, subject: "New answer to your question"
   end
 end

@@ -187,7 +187,6 @@ ActiveRecord::Schema.define(version: 2019_08_24_074029) do
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "questions", "users"
-  add_foreign_key "subscriptions", "questions"
   add_foreign_key "subscriptions", "users"
   add_foreign_key "votes", "users"
 end

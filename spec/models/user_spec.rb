@@ -46,4 +46,29 @@ RSpec.describe User, type: :model do
       expect { user.create_authorization!(auth) }.to change(Authorization, :count).by(1)
     end
   end
+
+  describe '#has_subscribe?' do
+    let(:user) { create(:user) }
+    let(:another_user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    it 'true' do
+      user.subscriptions.create!(question: question)
+
+      expect(user).to be_has_subscribe(question)
+    end
+
+    it 'false' do
+      expect(another_user).to_not be_has_subscribe(question)
+    end
+  end
+
+  describe '#get_subscribe' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    it 'get subscribe for question' do
+      expect(user.get_subscribe(question)).to eq(user.subscriptions.first)
+    end
+  end
 end
