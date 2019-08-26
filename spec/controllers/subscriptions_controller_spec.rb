@@ -23,7 +23,15 @@ RSpec.describe SubscriptionsController, type: :controller do
       it 'save subscription in db' do
         expect do
           post :create, params: { question_id: question.id }, format: :js
-        end.to change(Subscription, :count).by(2)
+        end.to change(Subscription, :count).by(1)
+      end
+
+      it 'can not subscribe to question twice' do
+        question.subscriptions.create(user: user)
+        question.subscriptions.reload
+        expect do
+          post :create, params: { question_id: question.id}, format: :js
+        end.to_not change(question.subscriptions, :count)
       end
 
       it 'render template create' do
@@ -36,20 +44,27 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe 'POST #destroy' do
     let(:user) { create(:user) }
+    let(:another_user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let!(:subscription) { create(:subscription, user: user, question: question) }
+    let(:subscription) { question.subscriptions.first.id }
 
-    it 'return status 401 if user logout' do
-      delete :destroy, params: { id: subscription }, format: :js
+    context 'user not author' do
+      it 'return status 401 if user logout' do
+        delete :destroy, params: { id: subscription }, format: :js
 
-      expect(response.status).to eq 401
+        expect(response.status).to eq 401
+      end
+
+      it 'delete subscription from db' do
+        expect { delete :destroy, params: { id: subscription }, format: :js }.to_not change(question.subscriptions, :count)
+      end
     end
 
     context 'login user' do
       before { login(user) }
 
       it 'delete subscription from db' do
-        expect { delete :destroy, params: { id: subscription }, format: :js }.to change(Subscription, :count).by -1
+        expect { delete :destroy, params: { id: subscription }, format: :js }.to change(question.subscriptions, :count).by -1
       end
 
       it 'renders template' do

@@ -14,9 +14,7 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
-  after_create :send_mail_to_author
-
-  after_create :notify_about_new_answer
+  after_create :send_mail_to_author, :subscription_notification_to_user
 
   def mark_as_best
     transaction do
@@ -32,7 +30,7 @@ class Answer < ApplicationRecord
     NewAnswerMailer.new_answer(self).deliver_later
   end
 
-  def notify_about_new_answer
+  def subscription_notification_to_user
     NewAnswerNotifierJob.perform_later(self)
   end
 end

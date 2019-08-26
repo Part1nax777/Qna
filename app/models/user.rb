@@ -27,8 +27,4 @@ class User < ApplicationRecord
   def has_subscribe?(question)
     subscribed_questions.exists?(question.id)
   end
-
-  def get_subscribe(question)
-    subscriptions.where(question: question).first
-  end
 end

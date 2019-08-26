@@ -53,22 +53,11 @@ RSpec.describe User, type: :model do
     let(:question) { create(:question, user: user) }
 
     it 'true' do
-      user.subscriptions.create!(question: question)
-
       expect(user).to be_has_subscribe(question)
     end
 
     it 'false' do
       expect(another_user).to_not be_has_subscribe(question)
-    end
-  end
-
-  describe '#get_subscribe' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
-
-    it 'get subscribe for question' do
-      expect(user.get_subscribe(question)).to eq(user.subscriptions.first)
     end
   end
 end

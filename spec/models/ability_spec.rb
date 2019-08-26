@@ -25,8 +25,8 @@ RSpec.describe Ability, type: :model do
     let(:another_question) { create :question, user: another_user }
     let(:answer) { create :answer, user: user, question: question }
     let(:another_answer) { create :answer, user: another_user, question: another_question }
-    let(:subscription) { create :subscription, question: question, user: user }
-    let(:another_subscription) { create :subscription, question: question, user: another_user }
+    let(:subscription) { question.subscriptions.first }
+    let(:another_subscription) { another_question.subscriptions.first }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }

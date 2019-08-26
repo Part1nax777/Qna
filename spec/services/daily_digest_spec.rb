@@ -5,6 +5,6 @@ RSpec.describe Services::DailyDigest do
 
   it 'send daily digest to all users' do
     users.each { |user| expect(DailyDigestMailer).to receive(:digest).with(user).and_call_original }
-    subject.send_digest
+    subject.call
   end
 end

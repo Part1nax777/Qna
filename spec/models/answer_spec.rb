@@ -48,9 +48,23 @@ RSpec.describe Answer, type: :model do
     let(:user) { create(:user) }
     let(:question) { build(:question, user: user) }
 
-    it 'send answer to autor of question' do
+    it 'send answer to author of question' do
       expect(NewAnswerNotifierJob).to receive(:perform_later).with(instance_of(Answer))
       Answer.create(question: question, user: user, body: 'new answer')
+    end
+  end
+
+  describe 'answer job' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:subscribers) { create_list(:subscriptions, 3, question: question) }
+    subject { build(:answer, question: question, user: user) }
+
+    it 'send notification to all subscribers' do
+      question.subscribers do
+        expect(NewAnswerNotifierJob).to receive(:perform).with(subject).and_call_original
+      end
+      subject.save!
     end
   end
 end

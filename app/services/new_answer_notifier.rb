@@ -4,7 +4,7 @@ class Services::NewAnswerNotifier
   end
 
   def send_notification
-    @answer.question.subscribers.find_each(batch_size: 500) do |subscriber|
+    @answer.question.subscribers.find_each do |subscriber|
       NewAnswerMailer.new_answer(subscriber, @answer).deliver_later
     end
   end

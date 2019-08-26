@@ -22,6 +22,17 @@ feature 'user can unsubscription to question', %q{
     expect(page).to_not have_content 'Unsubscribe'
   end
 
+  scenario 'author can unsubscribe to question', js: :true do
+    sign_in user
+
+    visit question_path(question)
+    expect(page).to have_content 'Unsubscribe'
+    click_on 'Unsubscribe'
+
+    expect(page).to have_content 'Subscribe'
+    expect(page).to_not have_content 'Unsubscribe'
+  end
+
   scenario 'unauthenticate user not can unsubscribe to question', js: true do
     visit question_path(question)
 
