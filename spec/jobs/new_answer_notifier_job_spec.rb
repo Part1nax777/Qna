@@ -11,7 +11,7 @@ RSpec.describe NewAnswerNotifierJob, type: :job do
   end
 
   it 'calls Services::NewAnswerNotifier#send_notification' do
-    expect(service).to receive(:send_notification)
+    expect(service).to receive(:call)
     NewAnswerNotifierJob.perform_now(answer)
   end
 end

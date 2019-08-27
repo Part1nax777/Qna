@@ -17,6 +17,6 @@ RSpec.describe Services::NewAnswerNotifier do
 
   it 'send email to subscribers' do
     users.each { |user| expect(NewAnswerMailer).to receive(:new_answer).with(user, answer).and_call_original }
-    subject.send_notification
+    subject.call
   end
 end

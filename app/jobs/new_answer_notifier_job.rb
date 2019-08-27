@@ -3,6 +3,6 @@ class NewAnswerNotifierJob < ApplicationJob
 
   def perform(answer)
     service = Services::NewAnswerNotifier.new(answer)
-    service.send_notification
+    service.call
   end
 end

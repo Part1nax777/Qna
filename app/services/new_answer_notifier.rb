@@ -3,7 +3,7 @@ class Services::NewAnswerNotifier
     @answer = answer
   end
 
-  def send_notification
+  def call
     @answer.question.subscribers.find_each do |subscriber|
       NewAnswerMailer.new_answer(subscriber, @answer).deliver_later
     end
