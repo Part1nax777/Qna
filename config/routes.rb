@@ -1,13 +1,14 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  root to: 'questions#index'
+
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
   use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
-  root to: 'questions#index'
 
   concern :votable do
     member do
@@ -43,6 +44,6 @@ Rails.application.routes.draw do
       end
     end
   end
-
+  get '/search', to: 'search#search'
   mount ActionCable.server => '/cable'
 end

@@ -1,0 +1,11 @@
+= form_with url: search_path, class: 'search', method: :get, local: true do |f|
+
+  - checks = [:question, :answer, :comment, :user]
+  p
+  = f.label :search
+  p= f.text_field :query, id: 'search'
+
+  - checks.each do |check|
+    = f.check_box check, checked: params["#{check}"] == 1
+    = f.label check
+  p= f.submit 'Find'

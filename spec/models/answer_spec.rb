@@ -67,4 +67,6 @@ RSpec.describe Answer, type: :model do
       subject.save!
     end
   end
+
+  it_behaves_like 'sphinxable', Answer
 end

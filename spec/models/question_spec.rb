@@ -26,4 +26,6 @@ RSpec.describe Question, type: :model do
     let(:question_resource) { create :question, user: user }
     let(:answer_resource) { create :answer, question: question_resource, user: user }
   end
+
+  it_behaves_like 'sphinxable', Question
 end

@@ -60,4 +60,6 @@ RSpec.describe User, type: :model do
       expect(another_user).to_not be_has_subscribe(question)
     end
   end
+
+  it_behaves_like 'sphinxable', User
 end

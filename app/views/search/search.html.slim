@@ -1,0 +1,10 @@
+h1 Search result
+ul
+  -if @data.blank?
+    h3 No result
+  -else
+    - @data.each do |resource|
+      li[class="search-#{resource.class.name.downcase}"]
+        p= resource.title if resource.respond_to?(:title)
+        p= resource.body if resource.respond_to?(:body)
+        p= resource.email if resource.respond_to?(:email)
