@@ -15,6 +15,8 @@ feature 'user can show badges', %q{
     visit question_path(question)
     click_on 'Best answer'
 
+    sleep 2
+
     visit badges_path
 
     expect(page).to have_content question.title
