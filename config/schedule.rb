@@ -14,7 +14,7 @@
 # end
 #
 every 1.day do
-  Services::DailyDigest.new.call
+  runner "DailyDigestJob.perform_now"
 end
 
 every 30.minutes do
