@@ -13,9 +13,9 @@
 #   rake "some:great:rake:task"
 # end
 #
-#every 1.day do
-#  Services::DailyDigest.new.call
-#end
+every 1.day do
+  Services::DailyDigest.new.call
+end
 
 every 30.minutes do
   rake "ts:index"
