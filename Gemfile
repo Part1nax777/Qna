@@ -54,7 +54,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'oj'
 gem 'sidekiq', '5.2.7'
 gem 'sinatra', require: false
-gem 'whenever', require: false
+gem 'whenever', '0.9.2', require: false
 gem 'mysql2'
 gem 'thinking-sphinx'
 
