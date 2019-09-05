@@ -1,52 +1,51 @@
 div id = "answer-#{answer.id}" class=('best' if answer.best)
+  - cache answer do
+    p= answer.body
 
-  p= answer.body
+    div class="answer-#{answer.id}"
 
-  div class="answer-#{answer.id}"
+      - if user_signed_in?
+        = render partial: 'votes/vote', locals: { resource: answer }
 
-    - if user_signed_in?
-      = render partial: 'votes/vote', locals: { resource: answer }
-
-  .links
-    p Links:
-    ul
-      - answer.links.each do |link|
-        div class="link-#{link.id}"
-          - if link.url_gist_link?
-            p
-              b= link.gist_title
-              br= link.gist_body
-          li= link_to link.name, link.url
-          - if current_user&.author_of?(link.linkable)
-            = link_to 'Delete link', link_path(link), method: :delete, remote: true
-
-  .answer-comments class="comments-#{answer.id}"
-    - if user_signed_in?
-      = render partial: 'comments/comment_form', locals: { resource: answer }
-      = render answer.comments
-
-  = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
-    p= f.label :body, 'You answer'
-    = f.text_area :body
-    p= f.label :files
-    = f.file_field :files, multiple: true, direct_upload: true
-    p= f.fields_for :links do |l|
     .links
-      = link_to_add_association 'add link', f, :links, partial: 'shared/link_template'
-    p= f.submit 'Save'
+      p Links:
+      ul
+        - answer.links.each do |link|
+          div class="link-#{link.id}"
+            - if link.url_gist_link?
+              p
+                b= link.gist_title
+                br= link.gist_body
+            li= link_to link.name, link.url
+            - if current_user&.author_of?(link.linkable)
+              = link_to 'Delete link', link_path(link), method: :delete, remote: true
 
-  - if can?(:update, answer)
+    .answer-comments class="comments-#{answer.id}"
+      - if user_signed_in?
+        = render partial: 'comments/comment_form', locals: { resource: answer }
+        = render answer.comments
 
-    p= link_to 'Edit', '#', class: 'edit-answer-link', data: {answer_id: answer.id}
-    p= link_to 'Delete answer', answer, method: :delete, remote: true
+    = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
+      p= f.label :body, 'You answer'
+      = f.text_area :body
+      p= f.label :files
+      = f.file_field :files, multiple: true, direct_upload: true
+      p= f.fields_for :links do |l|
+      .links
+        = link_to_add_association 'add link', f, :links, partial: 'shared/link_template'
+      p= f.submit 'Save'
 
-  - if can?(:update, answer.question)
-    p= link_to 'Best answer', mark_as_best_answer_path(answer), class: 'mark-as-best', data: { answer_id: answer.id }, method: :patch, remote: true
+    - if can?(:update, answer)
 
-  - if answer.files.attached?
-    - answer.files.each do |file|
-      div id=file.id class='file'
-        p= link_to file.filename.to_s, url_for(file)
-        - if current_user&.author_of?(answer)
-          = link_to 'Delete file', file_path(file), method: :delete, remote: true
+      p= link_to 'Edit', '#', class: 'edit-answer-link', data: {answer_id: answer.id}
+      p= link_to 'Delete answer', answer, method: :delete, remote: true
 
+    - if can?(:update, answer.question)
+      p= link_to 'Best answer', mark_as_best_answer_path(answer), class: 'mark-as-best', data: { answer_id: answer.id }, method: :patch, remote: true
+
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        div id=file.id class='file'
+          p= link_to file.filename.to_s, url_for(file)
+          - if current_user&.author_of?(answer)
+            = link_to 'Delete file', file_path(file), method: :delete, remote: true

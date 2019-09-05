@@ -1,16 +1,16 @@
-h1=question.title
-p= question.body
-
 div class="question-#{question.id}"
+  - cache question do
+    h1= question.title
+    p= question.body
 
-  - if user_signed_in?
-    = render partial: 'votes/vote', locals: { resource: question }
+    - if user_signed_in?
+      = render partial: 'votes/vote', locals: { resource: question }
 
-  - if can?(:create, Subscription)
-    .subscribe-option id="#{question.id}"
-      = render 'subscriptions/subscription', resource: question
+    - if can?(:create, Subscription)
+      .subscribe-option id="#{question.id}"
+        = render 'subscriptions/subscription', resource: question
 
-= render partial: 'show_question_files', locals: { question: question }
+    = render partial: 'show_question_files', locals: { question: question }
 
 .question id=question.id
   - if can?(:update, question)
