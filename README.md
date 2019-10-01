@@ -12,4 +12,3 @@
 - Task_14_homework - REST API, Serializers
 - Task_15_homework - Background job, ActiveJob
 - Task_16_homework - Sphinx
-- Task_17_homework - Optimization and caching
