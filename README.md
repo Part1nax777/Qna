@@ -1,24 +1,14 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- Task_3_homework - Introduction to TDD/BDD
+- Task_4_homework - Controller testing
+- Task_5_homework - Integration testing
+- Task_6_homework - Ajax in Rails
+- Task_7_homework - ActiveStorage in Rails, storage from Amazon S3
+- Task_8_homework - Nested forms and polymorphic associations
+- Task_9_homework - Various forms Ajax in Rails
+- Task_10_homework - ActionCable in Rails
+- Task_11_homework - OAuth protocol
+- Task_12_homework - Authorization in Rails
+- Task_13_homework - CanCanCan and Pundit
+- Task_14_homework - REST API, Serializers
+- Task_15_homework - Background job, ActiveJob
+- Task_16_homework - Sphinx
